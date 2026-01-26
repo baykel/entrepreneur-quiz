@@ -18,6 +18,16 @@
       --radius: 18px;
     }
 
+    .site-logo{
+  position:fixed;
+  top:16px;
+  right:16px;   /* אם אתה רוצה שמאל – החלף ל left:16px; */
+  width:70px;
+  opacity:0.95;
+  z-index:9999;
+}
+
+
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -211,6 +221,7 @@ option { color: #0b0c10; background: #eef1f8; }
 </head>
 
 <body>
+  <img src="/gil-logo.png" class="site-logo">
   <div class="wrap">
     <div class="card">
       <header>
