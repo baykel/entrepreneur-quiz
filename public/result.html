@@ -109,8 +109,35 @@ body{
     <div class="badge">הסוג היזמי שלך:</div>
     <div class="type" id="type"></div>
     <p class="desc" id="desc"></p>
+    <hr style="margin:25px 0; opacity:0.2">
 
-<a id="cta" class="btn" href="#" target="_blank">להמשך</a>
+<h3 style="font-size:22px;">כל ניצוץ יזמי הוא התחלה.</h3>
+
+<p style="margin-top:10px;">רשום/י לנו מהו החלום היזמי שלך:</p>
+
+<textarea id="dream"
+  placeholder="החלום היזמי שלי הוא..."
+  style="
+    width:100%;
+    min-height:100px;
+    margin-top:10px;
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    resize:vertical;
+    font-size:16px;
+  ">
+</textarea>
+
+<p style="margin-top:18px; color:#cfd3ff;">
+את מה שגילית כאן אפשר לפתח אצלנו – בתכניות, במועדון ובפעילויות החדשנות של תל חי.
+</p>
+
+<img src="/gil-logo.jpg"
+     style="margin-top:20px; max-width:200px;">
+
+
+
 <a id="againBtn" class="btn" href="/" onclick="window.location.replace('/'); return false;">התחל מחדש</a>
 
 
@@ -146,8 +173,7 @@ const links = {
 document.getElementById("type").textContent = type;
 document.getElementById("desc").textContent =
   resultText[type] || "";
-document.getElementById("cta").href =
-  links[type] || "#";
+
 
 /* אפקט קונפטי */
 function launchConfetti(){
