@@ -219,7 +219,43 @@
         <div class="pill">ניקוד לפי בחירה: 1–4</div>
       </div>
 
-      <div class="quiz" id="quiz"></div>
+      <div class="quiz">
+
+  <div class="q">
+    <h3>פרטים</h3>
+    <p>רק כדי שנוכל לשמור תוצאה מסודרת</p>
+
+    <div class="opts">
+      <label class="opt" style="cursor:default;">
+        <span style="min-width:90px; color: var(--muted);">שם מלא</span>
+        <input id="fullName" type="text" placeholder="לדוגמה: אביהוא סלה"
+               style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); color:var(--text);" />
+      </label>
+
+      <label class="opt" style="cursor:default;">
+        <span style="min-width:90px; color: var(--muted);">מגדר</span>
+        <select id="gender"
+                style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); color:var(--text);">
+          <option value="">בחר/י</option>
+          <option value="זכר">זכר</option>
+          <option value="נקבה">נקבה</option>
+          <option value="אחר">אחר</option>
+          <option value="מעדיפ/ה לא לציין">מעדיפ/ה לא לציין</option>
+        </select>
+      </label>
+
+      <label class="opt" style="cursor:default;">
+        <span style="min-width:90px; color: var(--muted);">אימייל</span>
+        <input id="email" type="email" placeholder="name@email.com"
+               style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); color:var(--text);" />
+      </label>
+    </div>
+  </div>
+
+  <div id="quiz"></div>
+
+</div>
+
 
       <div class="footer">
         <div>
@@ -232,7 +268,7 @@
   </div>
 
 <script>
-  // השאלות והתשובות המדויקות מהמסמך שלך :contentReference[oaicite:2]{index=2}
+  
   const data = [
     {
       q: "כשאת מזהה בעיה בסביבה היומיומית שלך?",
@@ -377,6 +413,17 @@
   }
 
   async function submitQuiz() {
+    const fullName = document.getElementById("fullName").value.trim(); // שם מלא
+const gender = document.getElementById("gender").value; // מגדר
+const email = document.getElementById("email").value.trim(); // אימייל
+
+if (!fullName || !gender) { // חובה שם + מגדר
+  errEl.textContent = "חסר שם מלא או מגדר."; // הודעת שגיאה
+  errEl.style.display = "block"; // מציג
+  document.getElementById("fullName").scrollIntoView({ behavior: "smooth", block: "center" }); // גלילה
+  return; // עצירה
+}
+
     const answers = [];
 
     for (let i = 0; i < data.length; i++) {
@@ -393,14 +440,15 @@
     const res = await fetch("/api/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers })
+      body: JSON.stringify({ answers, fullName, gender, email }) // שולח גם פרטים
     });
 
     const dataRes = await res.json();
 
     // מעבר לתוצאה
-    const params = new URLSearchParams({ score: String(dataRes.score), type: dataRes.type });
-    window.location.href = `/result.html?${params.toString()}`;
+const params = new URLSearchParams({ type: dataRes.type }); // לא שולחים ציון
+window.location.href = `/result.html?${params.toString()}`; // מעבר לתוצאה
+
   }
 
   render();

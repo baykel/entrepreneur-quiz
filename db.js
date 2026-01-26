@@ -1,20 +1,18 @@
 const Database = require("better-sqlite3"); // טוען ספריית SQLite
 
-const db = new Database("data.sqlite"); 
-// יוצר (או פותח) קובץ בסיס נתונים בשם data.sqlite
+const db = new Database("data.sqlite"); // יוצר/פותח קובץ DB בשם data.sqlite
 
 db.exec(`
-CREATE TABLE IF NOT EXISTS responses (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  created_at TEXT NOT NULL,
-  name TEXT,
-  phone TEXT,
-  score INTEGER NOT NULL,
-  type TEXT NOT NULL,
-  answers_json TEXT NOT NULL
-);
-`);
-// יוצר טבלה בשם responses אם היא לא קיימת
+  CREATE TABLE IF NOT EXISTS responses ( -- יוצר טבלה אם לא קיימת
+    id INTEGER PRIMARY KEY AUTOINCREMENT, -- מזהה רץ
+    created_at TEXT NOT NULL, -- תאריך יצירה
+    full_name TEXT NOT NULL, -- שם מלא
+    gender TEXT NOT NULL, -- מגדר
+    email TEXT, -- אימייל (אופציונלי)
+    score INTEGER NOT NULL, -- ציון פנימי (לא מציגים למשתמש)
+    type TEXT NOT NULL, -- סוג יזם
+    answers_json TEXT NOT NULL -- תשובות בפורמט JSON
+  );
+`); // מריץ SQL
 
-module.exports = db; 
-// מאפשר להשתמש בבסיס הנתונים בקבצים אחרים
+module.exports = db; // מייצא את החיבור ל-DB
