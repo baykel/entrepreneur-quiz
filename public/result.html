@@ -117,6 +117,10 @@ body{
 
 </div>
 
+<button id="againBtn">לעשות שוב</button>
+<!-- "כפתור להתחלה מחדש" -->
+
+
 <script>
 
 const params = new URLSearchParams(location.search);
@@ -166,6 +170,15 @@ setTimeout(()=>{
   document.getElementById("resultCard").style.display="block";
   launchConfetti();
 },2000);
+
+
+
+document.getElementById("againBtn").addEventListener("click", () => { 
+// "לחיצה על כפתור שוב"
+  window.location.href = "/"; 
+  // "חוזר לדף הראשי"
+});
+
 
 </script>
 
