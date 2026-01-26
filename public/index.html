@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>איזה יזם/ת אני?</title>
+
+  <style>
+    :root {
+      --bg: #0b0c10;
+      --card: #12141b;
+      --muted: #a8b0c0;
+      --text: #eef1f8;
+      --line: rgba(255,255,255,0.12);
+      --accent: #7c5cff;
+      --accent2: #2ee59d;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Arial;
+      background: radial-gradient(1200px 800px at 70% -10%, rgba(124,92,255,0.35), transparent 60%),
+                  radial-gradient(900px 700px at 10% 0%, rgba(46,229,157,0.18), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    header {
+      display: grid;
+      gap: 10px;
+      padding: 18px 18px 6px;
+    }
+
+    .title {
+      font-size: 30px;
+      line-height: 1.1;
+      margin: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px 6px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      padding: 8px 10px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .progress {
+      flex: 1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      min-width: 160px;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width 220ms ease;
+    }
+
+    .card {
+      background: rgba(18,20,27,0.85);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .quiz {
+      margin-top: 10px;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .q {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .q h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .q p {
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: -0.2px;
+    }
+
+    .opts {
+      display: grid;
+      gap: 10px;
+    }
+
+    .opt {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,0.02);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+
+    .opt:hover {
+      transform: translateY(-1px);
+      border-color: rgba(124,92,255,0.5);
+      background: rgba(124,92,255,0.08);
+    }
+
+    input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .footer {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    button {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(124,92,255,0.18);
+      transition: transform 120ms ease;
+      white-space: nowrap;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.3;
+    }
+
+    .error {
+      color: #ffb3b3;
+      font-size: 13px;
+      display: none;
+    }
+
+    @media (max-width: 560px) {
+      .title { font-size: 26px; }
+      .q p { font-size: 17px; }
+      .footer { flex-direction: column; align-items: stretch; }
+      button { width: 100%; }
+      .progress { width: 100%; }
+      .topbar { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1 class="title">איזה יזם/ת אני?</h1>
+        <p class="subtitle">ענו על 10 שאלות קצרות וגלו איזה טיפוס יזמי אתם.</p>
+      </header>
+
+      <div class="topbar">
+        <div class="pill" id="counter">0/10</div>
+        <div class="progress" aria-label="progress">
+          <div id="bar"></div>
+        </div>
+        <div class="pill">ניקוד לפי בחירה: 1–4</div>
+      </div>
+
+      <div class="quiz" id="quiz"></div>
+
+      <div class="footer">
+        <div>
+          <div class="hint">טיפ: תבחרו את מה שהכי “אתם”, בלי לחשוב יותר מדי.</div>
+          <div class="error" id="err">חסר לך לפחות תשובה אחת.</div>
+        </div>
+        <button id="submitBtn">סיים וקבל תוצאה</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // השאלות והתשובות המדויקות מהמסמך שלך :contentReference[oaicite:2]{index=2}
+  const data = [
+    {
+      q: "כשאת מזהה בעיה בסביבה היומיומית שלך?",
+      a: [
+        "מנסה להבין מאיפה היא מגיעה",
+        "חושב\\ת על רעיון חדש שיכול לשפר",
+        "חושב\\ת על חיבור מול אנשים שיכולים לעזור",
+        "מחפש\\ת דרך לטפל בזה מידית"
+      ]
+    },
+    {
+      q: "מה הכי מסקרן אותך?",
+      a: [
+        "להבין תהליכים",
+        "לדמיין משהו חדש",
+        "לעבוד עם אנשים וליצור קשרים חדשים",
+        "לבצע פרויקטים ולהתקדם"
+      ]
+    },
+    {
+      q: "איך את ניגשת לפרויקט חדש",
+      a: [
+        "קורא\\ת ולומד\\ת קודם",
+        "חושב\\ת על כיוונים יצירתיים",
+        "מדבר\\ת עם אנשים ומחליפ\\ה רעיונות",
+        "מתחיל\\ה לעשות ולומד\\ת תוך כדי"
+      ]
+    },
+    {
+      q: "איזה משפט נשמע לך מוכר",
+      a: [
+        "אני שמ\\ה לב לפרטים קטנים",
+        "יש לי מלא רעיונות",
+        "אני טוב\\ה בחיבורים בין אנשים",
+        "אני אוהב\\ת שהדברים זזים"
+      ]
+    },
+    {
+      q: "כשמישהו מציג רעיון חדש",
+      a: [
+        "אני שואל\\ת שאלות עומק",
+        "אני חושב\\ת איך אפשר לעשות את זה טוב יותר",
+        "אני בודק\\ת מי יכול לעזור לו",
+        "אני שואל\\ת איך הוא יבצע את זה"
+      ]
+    },
+    {
+      q: "בשעה פנויה את\\ה מעדיפ\\ה",
+      a: [
+        "לצפות במשהו מעשיר ומלמד",
+        "להעלות ולפתח רעיונות חדשים",
+        "לייצר שיח עם מישהו חדש שמעניין אותך",
+        "לסגור משימות שדחית כבר הרבה זמן"
+      ]
+    },
+    {
+      q: "מה מבאס אותך יותר",
+      a: [
+        "בעיות שאין להן פתרון",
+        "רעיונות טובים שלא באים ליידי מימוש",
+        "אנשים שלא משתפים פעולה",
+        "דיבורים בלי ביצוע"
+      ]
+    },
+    {
+      q: "כשיש לך משימה קשה",
+      a: [
+        "את\\ה לומדת אותה לעומק",
+        "את\\ה מחפש\\ת דרך יצירתית לגשת אליה",
+        "את\\ה מבקש\\ת נקודת מבט מאדם נוסף",
+        "את\\ה קופצ\\ת ישר לתוך העשייה"
+      ]
+    },
+    {
+      q: "על מה את מקבלת מחמאות בדרך כלל",
+      a: [
+        "חשיבה חדה",
+        "יצירתיות",
+        "יכולת תקשורת",
+        "יעילות בעשייה"
+      ]
+    },
+    {
+      q: "מה מהבאים הכי מתאים לך",
+      a: [
+        "אני אוהבת לפענח ולפתח",
+        "אני אוהבת לחלום ולחדש",
+        "אני אוהבת תקשורת ואנשים",
+        "אני אוהבת שדברים קורים"
+      ]
+    }
+  ];
+
+  const quizEl = document.getElementById("quiz");
+  const counterEl = document.getElementById("counter");
+  const barEl = document.getElementById("bar");
+  const errEl = document.getElementById("err");
+
+  function render() {
+    quizEl.innerHTML = "";
+    data.forEach((item, i) => {
+      const q = document.createElement("div");
+      q.className = "q";
+
+      q.innerHTML = `
+        <h3>שאלה ${i + 1}</h3>
+        <p>${item.q}</p>
+        <div class="opts" id="opts_${i}"></div>
+      `;
+
+      const opts = q.querySelector(`#opts_${i}`);
+
+      item.a.forEach((txt, j) => {
+        const val = j + 1; // 1..4
+        const id = `q${i}_${val}`;
+
+        const label = document.createElement("label");
+        label.className = "opt";
+        label.setAttribute("for", id);
+
+        label.innerHTML = `
+          <input id="${id}" type="radio" name="q${i}" value="${val}" />
+          <span>${txt}</span>
+        `;
+
+        opts.appendChild(label);
+      });
+
+      quizEl.appendChild(q);
+    });
+  }
+
+  function updateProgress() {
+    const answered = data.reduce((acc, _, i) => {
+      return acc + (document.querySelector(`input[name="q${i}"]:checked`) ? 1 : 0);
+    }, 0);
+
+    counterEl.textContent = `${answered}/10`;
+    barEl.style.width = `${(answered / 10) * 100}%`;
+
+    errEl.style.display = "none";
+  }
+
+  async function submitQuiz() {
+    const answers = [];
+
+    for (let i = 0; i < data.length; i++) {
+      const picked = document.querySelector(`input[name="q${i}"]:checked`);
+      if (!picked) {
+        errEl.style.display = "block";
+        // גלילה לשאלה שחסרה
+        document.querySelectorAll(".q")[i].scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      answers.push(Number(picked.value));
+    }
+
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers })
+    });
+
+    const dataRes = await res.json();
+
+    // מעבר לתוצאה
+    const params = new URLSearchParams({ score: String(dataRes.score), type: dataRes.type });
+    window.location.href = `/result.html?${params.toString()}`;
+  }
+
+  render();
+  updateProgress();
+
+  document.addEventListener("change", (e) => {
+    if (e.target && e.target.matches('input[type="radio"]')) updateProgress();
+  });
+
+  document.getElementById("submitBtn").addEventListener("click", submitQuiz);
+</script>
+</body>
+</html>

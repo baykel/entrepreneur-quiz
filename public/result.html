@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>התוצאה שלך</title>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0b0c10;
+  color:white;
+  overflow:hidden;
+}
+
+.center{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  text-align:center;
+  padding:20px;
+}
+
+#loading{
+  font-size:28px;
+  animation:pulse 0.8s infinite alternate;
+}
+
+@keyframes pulse{
+  from{transform:scale(1);}
+  to{transform:scale(1.1);}
+}
+
+.card{
+  background:#12141b;
+  border-radius:20px;
+  padding:40px 30px;
+  max-width:500px;
+  width:100%;
+  box-shadow:0 0 30px rgba(0,0,0,0.5);
+  display:none;
+  position:relative;
+  z-index:2;
+}
+
+.badge{
+  background:linear-gradient(90deg,#7c5cff,#2ee59d);
+  padding:10px 25px;
+  border-radius:999px;
+  font-size:18px;
+  display:inline-block;
+  margin-bottom:15px;
+}
+
+.type{
+  font-size:42px;
+  margin:10px 0;
+}
+
+.desc{
+  color:#cfd3ff;
+  font-size:17px;
+  line-height:1.5;
+}
+
+.btn{
+  margin-top:25px;
+  display:inline-block;
+  background:white;
+  color:black;
+  padding:12px 20px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:bold;
+}
+
+/* 🎉 קונפטי */
+.confetti{
+  position:absolute;
+  width:10px;
+  height:10px;
+  background:red;
+  top:-10px;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{
+    transform:translateY(110vh) rotate(360deg);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="center">
+
+  <!-- שלב תופים -->
+  <div id="loading">
+    🥁 בודקים את התוצאה שלך...
+  </div>
+
+  <!-- כרטיס תוצאה -->
+  <div class="card" id="resultCard">
+    <div class="badge">הסוג היזמי שלך:</div>
+    <div class="type" id="type"></div>
+    <p class="desc" id="desc"></p>
+
+    <a id="cta" class="btn" href="#" target="_blank">
+      להמשך
+    </a>
+  </div>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(location.search);
+const type = params.get("type") || "לא ידוע";
+
+/* טקסטים */
+const resultText = {
+  "המתבוננת":
+    "יש לך יכולת לראות דפוסים והזדמנויות שאחרים מפספסים. את מביאה עומק ודיוק לכל רעיון.",
+  "החולמת":
+    "יש לך חשיבה יצירתית ודמיון שמוביל אותך קדימה. את רואה אפשרויות חדשות.",
+  "המחברת":
+    "אנשים הם המרכז אצלך. יש לך יכולת לחבר, לשתף פעולה ולהניע אחרים.",
+  "המיישם":
+    "יש לך אנרגיה שמניעה דברים לקרות. את מביאה רעיונות לשטח."
+};
+
+const links = {
+  "המתבוננת":"https://example.com/observer",
+  "החולמת":"https://example.com/dreamer",
+  "המחברת":"https://example.com/connector",
+  "המיישם":"https://example.com/doer"
+};
+
+document.getElementById("type").textContent = type;
+document.getElementById("desc").textContent =
+  resultText[type] || "";
+document.getElementById("cta").href =
+  links[type] || "#";
+
+/* אפקט קונפטי */
+function launchConfetti(){
+  for(let i=0;i<80;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    c.style.animationDuration=(2+Math.random()*2)+"s";
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+/* תופים -> תוצאה */
+setTimeout(()=>{
+  document.getElementById("loading").style.display="none";
+  document.getElementById("resultCard").style.display="block";
+  launchConfetti();
+},2000);
+
+</script>
+
+</body>
+</html>
