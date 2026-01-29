@@ -18,16 +18,6 @@
       --radius: 18px;
     }
 
-    .site-logo{
-  position:fixed;
-  top:16px;
-  right:16px;   /* אם אתה רוצה שמאל – החלף ל left:16px; */
-  width:70px;
-  opacity:0.95;
-  z-index:9999;
-}
-
-
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -38,10 +28,30 @@
       color: var(--text);
     }
 
+    .site-logo{
+      position:fixed;
+      top:16px;
+      right:16px; /* לשמאל: החלף ל left:16px; ותמחק right */
+      width:70px;
+      opacity:0.95;
+      z-index:9999;
+      pointer-events:none;
+      user-select:none;
+    }
+
     .wrap {
       max-width: 920px;
       margin: 0 auto;
       padding: 24px 16px 40px;
+    }
+
+    .card {
+      background: rgba(18,20,27,0.85);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
     }
 
     header {
@@ -49,13 +59,6 @@
       gap: 10px;
       padding: 18px 18px 6px;
     }
-
-    select { color: var(--text); background: rgba(255,255,255,0.02); } 
-/* "צבע טקסט רקע של select" */
-
-option { color: #0b0c10; background: #eef1f8; } 
-/* "צבע טקסט ורקע של האופציות ברשימה" */
-
 
     .title {
       font-size: 30px;
@@ -88,6 +91,7 @@ option { color: #0b0c10; background: #eef1f8; }
       display: inline-flex;
       gap: 8px;
       align-items: center;
+      white-space: nowrap;
     }
 
     .progress {
@@ -105,14 +109,6 @@ option { color: #0b0c10; background: #eef1f8; }
       width: 0%;
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       transition: width 220ms ease;
-    }
-
-    .card {
-      background: rgba(18,20,27,0.85);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
     }
 
     .quiz {
@@ -165,12 +161,21 @@ option { color: #0b0c10; background: #eef1f8; }
       background: rgba(124,92,255,0.08);
     }
 
+    .opt.disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     input[type="radio"] {
       width: 18px;
       height: 18px;
       accent-color: var(--accent);
       cursor: pointer;
     }
+
+    select { color: var(--text); background: rgba(255,255,255,0.02); }
+    option { color: #0b0c10; background: #eef1f8; }
 
     .footer {
       display: flex;
@@ -179,6 +184,18 @@ option { color: #0b0c10; background: #eef1f8; }
       justify-content: space-between;
       padding: 14px 18px 18px;
       border-top: 1px solid var(--line);
+    }
+
+    .footer-left{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .footer-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
     }
 
     button {
@@ -191,11 +208,23 @@ option { color: #0b0c10; background: #eef1f8; }
       background: linear-gradient(90deg, var(--accent), var(--accent2));
       cursor: pointer;
       box-shadow: 0 10px 20px rgba(124,92,255,0.18);
-      transition: transform 120ms ease;
+      transition: transform 120ms ease, opacity 120ms ease;
       white-space: nowrap;
     }
-
     button:hover { transform: translateY(-1px); }
+
+    button.secondary{
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--line);
+      color: var(--text);
+      box-shadow: none;
+    }
+
+    button:disabled{
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
 
     .hint {
       color: var(--muted);
@@ -209,21 +238,51 @@ option { color: #0b0c10; background: #eef1f8; }
       display: none;
     }
 
+    /* מסכים */
+    #introScreen { display: block; }
+    #quizScreen { display: none; }
+
+    .introBox{
+      padding: 6px 18px 18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .introCard{
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+      display:grid;
+      gap:10px;
+    }
+
+    .introCTA{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-start;
+      flex-wrap:wrap;
+    }
+
     @media (max-width: 560px) {
       .title { font-size: 26px; }
       .q p { font-size: 17px; }
       .footer { flex-direction: column; align-items: stretch; }
+      .footer-actions { justify-content: stretch; }
       button { width: 100%; }
       .progress { width: 100%; }
       .topbar { flex-direction: column; align-items: stretch; }
+      .pill { justify-content:center; }
     }
   </style>
 </head>
 
 <body>
-  <img src="/gil-logo.png" class="site-logo">
+  <img src="/gil-logo.png" class="site-logo" alt="לוגו">
   <div class="wrap">
     <div class="card">
+
       <header>
         <h1 class="title">איזה יזם/ת אני?</h1>
         <p class="subtitle">ענו על 10 שאלות קצרות וגלו איזה טיפוס יזמי אתם.</p>
@@ -237,248 +296,427 @@ option { color: #0b0c10; background: #eef1f8; }
         <div class="pill">ניקוד לפי בחירה: 1–4</div>
       </div>
 
-      <div class="quiz">
+      <!-- INTRO -->
+      <div id="introScreen">
+        <div class="introBox">
+          <div class="introCard">
+            <p style="margin:0; font-size:18px;">
+              זה שאלון קצר, קליל ומדויק.
+            </p>
+            <p style="margin:0; color:var(--muted);">
+              תבחר את האופציה שהכי “אתה”, בלי לחשוב יותר מדי.
+            </p>
 
-  <div class="q">
-    <h3>פרטים</h3>
-    <p>רק כדי שנוכל לשמור תוצאה מסודרת</p>
-
-<label class="opt" style="cursor:default;">
-  <span style="min-width:90px; color: var(--muted);">שם מלא</span>
-  <input
-    id="fullName"
-    type="text"
-    placeholder="שם מלא"
-    style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); color:var(--text);"
-  />
-</label>
-
-
-      <label class="opt" style="cursor:default;">
-        <span style="min-width:90px; color: var(--muted);">מגדר</span>
-        <select id="gender"
-                style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); color:var(--text);">
-          <option value="">בחר/י</option>
-          <option value="זכר">זכר</option>
-          <option value="נקבה">נקבה</option>
-        </select>
-      </label>
-
-      <label class="opt" style="cursor:default;">
-        <span style="min-width:90px; color: var(--muted);">אימייל</span>
-        <input id="email" type="email" placeholder="name@email.com"
-               style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line); background:rgba(255,255,255,0.02); color:var(--text);" />
-      </label>
-    </div>
-  </div>
-
-  <div id="quiz"></div>
-
-</div>
-
-
-      <div class="footer">
-        <div>
-          <div class="hint">טיפ: תבחרו את מה שהכי “אתם”, בלי לחשוב יותר מדי.</div>
-          <div class="error" id="err">חסר לך לפחות תשובה אחת.</div>
+            <div class="introCTA">
+              <button id="startBtn">בואו נתחיל</button>
+              <span class="hint">לוקח בערך דקה</span>
+            </div>
+          </div>
         </div>
-        <button id="submitBtn">סיים וקבל תוצאה</button>
       </div>
+
+      <!-- QUIZ ONE CARD -->
+      <div id="quizScreen">
+        <div class="quiz">
+          <div id="stepCard"></div>
+        </div>
+
+        <div class="footer">
+          <div class="footer-left">
+            <div class="hint" id="hintText">טיפ: תבחר את מה שהכי “אתה”, בלי לחשוב יותר מדי.</div>
+            <div class="error" id="err"></div>
+          </div>
+
+          <div class="footer-actions">
+            <button id="prevBtn" class="secondary">הקודם</button>
+            <button id="nextBtn">הבא</button>
+            <button id="submitBtn" style="display:none;">סיים וקבל תוצאה</button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
 <script>
-  
+  // ====== DATA ======
   const data = [
-    {
-      q: "כשאת מזהה בעיה בסביבה היומיומית שלך?",
-      a: [
-        "מנסה להבין מאיפה היא מגיעה",
-        "חושב\\ת על רעיון חדש שיכול לשפר",
-        "חושב\\ת על חיבור מול אנשים שיכולים לעזור",
-        "מחפש\\ת דרך לטפל בזה מידית"
-      ]
-    },
-    {
-      q: "מה הכי מסקרן אותך?",
-      a: [
-        "להבין תהליכים",
-        "לדמיין משהו חדש",
-        "לעבוד עם אנשים וליצור קשרים חדשים",
-        "לבצע פרויקטים ולהתקדם"
-      ]
-    },
-    {
-      q: "איך את ניגשת לפרויקט חדש",
-      a: [
-        "קורא\\ת ולומד\\ת קודם",
-        "חושב\\ת על כיוונים יצירתיים",
-        "מדבר\\ת עם אנשים ומחליפ\\ה רעיונות",
-        "מתחיל\\ה לעשות ולומד\\ת תוך כדי"
-      ]
-    },
-    {
-      q: "איזה משפט נשמע לך מוכר",
-      a: [
-        "אני שמ\\ה לב לפרטים קטנים",
-        "יש לי מלא רעיונות",
-        "אני טוב\\ה בחיבורים בין אנשים",
-        "אני אוהב\\ת שהדברים זזים"
-      ]
-    },
-    {
-      q: "כשמישהו מציג רעיון חדש",
-      a: [
-        "אני שואל\\ת שאלות עומק",
-        "אני חושב\\ת איך אפשר לעשות את זה טוב יותר",
-        "אני בודק\\ת מי יכול לעזור לו",
-        "אני שואל\\ת איך הוא יבצע את זה"
-      ]
-    },
-    {
-      q: "בשעה פנויה את\\ה מעדיפ\\ה",
-      a: [
-        "לצפות במשהו מעשיר ומלמד",
-        "להעלות ולפתח רעיונות חדשים",
-        "לייצר שיח עם מישהו חדש שמעניין אותך",
-        "לסגור משימות שדחית כבר הרבה זמן"
-      ]
-    },
-    {
-      q: "מה מבאס אותך יותר",
-      a: [
-        "בעיות שאין להן פתרון",
-        "רעיונות טובים שלא באים ליידי מימוש",
-        "אנשים שלא משתפים פעולה",
-        "דיבורים בלי ביצוע"
-      ]
-    },
-    {
-      q: "כשיש לך משימה קשה",
-      a: [
-        "את\\ה לומדת אותה לעומק",
-        "את\\ה מחפש\\ת דרך יצירתית לגשת אליה",
-        "את\\ה מבקש\\ת נקודת מבט מאדם נוסף",
-        "את\\ה קופצ\\ת ישר לתוך העשייה"
-      ]
-    },
-    {
-      q: "על מה את מקבלת מחמאות בדרך כלל",
-      a: [
-        "חשיבה חדה",
-        "יצירתיות",
-        "יכולת תקשורת",
-        "יעילות בעשייה"
-      ]
-    },
-    {
-      q: "מה מהבאים הכי מתאים לך",
-      a: [
-        "אני אוהבת לפענח ולפתח",
-        "אני אוהבת לחלום ולחדש",
-        "אני אוהבת תקשורת ואנשים",
-        "אני אוהבת שדברים קורים"
-      ]
-    }
+    { q: "כשאת מזהה בעיה בסביבה היומיומית שלך?", a: [
+      "מנסה להבין מאיפה היא מגיעה",
+      "חושב\\ת על רעיון חדש שיכול לשפר",
+      "חושב\\ת על חיבור מול אנשים שיכולים לעזור",
+      "מחפש\\ת דרך לטפל בזה מידית"
+    ]},
+    { q: "מה הכי מסקרן אותך?", a: [
+      "להבין תהליכים",
+      "לדמיין משהו חדש",
+      "לעבוד עם אנשים וליצור קשרים חדשים",
+      "לבצע פרויקטים ולהתקדם"
+    ]},
+    { q: "איך את ניגשת לפרויקט חדש", a: [
+      "קורא\\ת ולומד\\ת קודם",
+      "חושב\\ת על כיוונים יצירתיים",
+      "מדבר\\ת עם אנשים ומחליפ\\ה רעיונות",
+      "מתחיל\\ה לעשות ולומד\\ת תוך כדי"
+    ]},
+    { q: "איזה משפט נשמע לך מוכר", a: [
+      "אני שמ\\ה לב לפרטים קטנים",
+      "יש לי מלא רעיונות",
+      "אני טוב\\ה בחיבורים בין אנשים",
+      "אני אוהב\\ת שהדברים זזים"
+    ]},
+    { q: "כשמישהו מציג רעיון חדש", a: [
+      "אני שואל\\ת שאלות עומק",
+      "אני חושב\\ת איך אפשר לעשות את זה טוב יותר",
+      "אני בודק\\ת מי יכול לעזור לו",
+      "אני שואל\\ת איך הוא יבצע את זה"
+    ]},
+    { q: "בשעה פנויה את\\ה מעדיפ\\ה", a: [
+      "לצפות במשהו מעשיר ומלמד",
+      "להעלות ולפתח רעיונות חדשים",
+      "לייצר שיח עם מישהו חדש שמעניין אותך",
+      "לסגור משימות שדחית כבר הרבה זמן"
+    ]},
+    { q: "מה מבאס אותך יותר", a: [
+      "בעיות שאין להן פתרון",
+      "רעיונות טובים שלא באים ליידי מימוש",
+      "אנשים שלא משתפים פעולה",
+      "דיבורים בלי ביצוע"
+    ]},
+    { q: "כשיש לך משימה קשה", a: [
+      "את\\ה לומדת אותה לעומק",
+      "את\\ה מחפש\\ת דרך יצירתית לגשת אליה",
+      "את\\ה מבקש\\ת נקודת מבט מאדם נוסף",
+      "את\\ה קופצ\\ת ישר לתוך העשייה"
+    ]},
+    { q: "על מה את מקבלת מחמאות בדרך כלל", a: [
+      "חשיבה חדה",
+      "יצירתיות",
+      "יכולת תקשורת",
+      "יעילות בעשייה"
+    ]},
+    { q: "מה מהבאים הכי מתאים לך", a: [
+      "אני אוהבת לפענח ולפתח",
+      "אני אוהבת לחלום ולחדש",
+      "אני אוהבת תקשורת ואנשים",
+      "אני אוהבת שדברים קורים"
+    ]}
   ];
 
-  const quizEl = document.getElementById("quiz");
+  // ====== STATE ======
+  // stepType: "details" OR "q"
+  // stepIndex: -1 (intro), 0..10 where 0=details, 1..10 questions
+  let stepIndex = -1;
+
+  const answers = Array(data.length).fill(null); // 10 answers (1..4)
+  let fullName = "";
+  let gender = "";
+  let email = "";
+
+  // ====== ELEMENTS ======
+  const introScreen = document.getElementById("introScreen");
+  const quizScreen  = document.getElementById("quizScreen");
+  const stepCard    = document.getElementById("stepCard");
+
   const counterEl = document.getElementById("counter");
-  const barEl = document.getElementById("bar");
-  const errEl = document.getElementById("err");
+  const barEl     = document.getElementById("bar");
+  const errEl     = document.getElementById("err");
 
-  function render() {
-    quizEl.innerHTML = "";
-    data.forEach((item, i) => {
-      const q = document.createElement("div");
-      q.className = "q";
+  const startBtn  = document.getElementById("startBtn");
+  const prevBtn   = document.getElementById("prevBtn");
+  const nextBtn   = document.getElementById("nextBtn");
+  const submitBtn = document.getElementById("submitBtn");
 
-      q.innerHTML = `
-        <h3>שאלה ${i + 1}</h3>
-        <p>${item.q}</p>
-        <div class="opts" id="opts_${i}"></div>
-      `;
-
-      const opts = q.querySelector(`#opts_${i}`);
-
-      item.a.forEach((txt, j) => {
-        const val = j + 1; // 1..4
-        const id = `q${i}_${val}`;
-
-        const label = document.createElement("label");
-        label.className = "opt";
-        label.setAttribute("for", id);
-
-        label.innerHTML = `
-          <input id="${id}" type="radio" name="q${i}" value="${val}" />
-          <span>${txt}</span>
-        `;
-
-        opts.appendChild(label);
-      });
-
-      quizEl.appendChild(q);
-    });
+  // ====== HELPERS ======
+  function showError(msg){
+    errEl.textContent = msg;
+    errEl.style.display = "block";
   }
-
-  function updateProgress() {
-    const answered = data.reduce((acc, _, i) => {
-      return acc + (document.querySelector(`input[name="q${i}"]:checked`) ? 1 : 0);
-    }, 0);
-
-    counterEl.textContent = `${answered}/10`;
-    barEl.style.width = `${(answered / 10) * 100}%`;
-
+  function clearError(){
+    errEl.textContent = "";
     errEl.style.display = "none";
   }
 
-  async function submitQuiz() {
-    const fullName = document.getElementById("fullName").value.trim(); // שם מלא
-const gender = document.getElementById("gender").value; // מגדר
-const email = document.getElementById("email").value.trim(); // אימייל
-
-if (!fullName || !gender) { // חובה שם + מגדר
-  errEl.textContent = "חסר שם מלא או מגדר."; // הודעת שגיאה
-  errEl.style.display = "block"; // מציג
-  document.getElementById("fullName").scrollIntoView({ behavior: "smooth", block: "center" }); // גלילה
-  return; // עצירה
-}
-
-    const answers = [];
-
-    for (let i = 0; i < data.length; i++) {
-      const picked = document.querySelector(`input[name="q${i}"]:checked`);
-      if (!picked) {
-        errEl.style.display = "block";
-        // גלילה לשאלה שחסרה
-        document.querySelectorAll(".q")[i].scrollIntoView({ behavior: "smooth", block: "center" });
-        return;
-      }
-      answers.push(Number(picked.value));
-    }
-
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ answers, fullName, gender, email }) // שולח גם פרטים
-    });
-
-    const dataRes = await res.json();
-
-    // מעבר לתוצאה
-const params = new URLSearchParams({ type: dataRes.type }); // לא שולחים ציון
-window.location.href = `/result.html?${params.toString()}`; // מעבר לתוצאה
-
+  function answeredCount(){
+    return answers.filter(v => v !== null).length;
   }
 
-  render();
-  updateProgress();
+  function updateProgress(){
+    const answered = answeredCount();
+    counterEl.textContent = `${answered}/10`;
+    barEl.style.width = `${(answered / 10) * 100}%`;
+  }
 
-  document.addEventListener("change", (e) => {
-    if (e.target && e.target.matches('input[type="radio"]')) updateProgress();
+  function goToStep(newStep){
+    stepIndex = newStep;
+    clearError();
+    renderStep();
+    updateProgress();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function currentIsDetails(){
+    return stepIndex === 0;
+  }
+
+  function currentIsQuestion(){
+    return stepIndex >= 1 && stepIndex <= data.length;
+  }
+
+  function currentQIndex(){
+    // questions start at stepIndex=1
+    return stepIndex - 1;
+  }
+
+  function isLastQuestionStep(){
+    return stepIndex === data.length;
+  }
+
+  // ====== RENDER ======
+  function renderStep(){
+    // buttons visibility
+    prevBtn.style.display = (stepIndex <= 0) ? "none" : "inline-block";
+    nextBtn.style.display = "inline-block";
+    submitBtn.style.display = "none";
+
+    // details step
+    if (currentIsDetails()){
+      stepCard.innerHTML = `
+        <div class="q">
+          <h3>פרטים</h3>
+          <p>רק כדי שנוכל לשמור תוצאה מסודרת</p>
+
+          <label class="opt" style="cursor:default;">
+            <span style="min-width:90px; color: var(--muted);">שם מלא</span>
+            <input id="fullName" type="text" placeholder="שם מלא"
+              value="${escapeHtml(fullName)}"
+              style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line);
+                     background:rgba(255,255,255,0.02); color:var(--text);"
+            />
+          </label>
+
+          <label class="opt" style="cursor:default;">
+            <span style="min-width:90px; color: var(--muted);">מגדר</span>
+            <select id="gender"
+              style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line);
+                     background:rgba(255,255,255,0.02); color:var(--text);">
+              <option value="">בחר/י</option>
+              <option value="זכר" ${gender === "זכר" ? "selected" : ""}>זכר</option>
+              <option value="נקבה" ${gender === "נקבה" ? "selected" : ""}>נקבה</option>
+            </select>
+          </label>
+
+          <label class="opt" style="cursor:default;">
+            <span style="min-width:90px; color: var(--muted);">אימייל</span>
+            <input id="email" type="email" placeholder="name@email.com"
+              value="${escapeHtml(email)}"
+              style="flex:1; padding:10px; border-radius:12px; border:1px solid var(--line);
+                     background:rgba(255,255,255,0.02); color:var(--text);"
+            />
+          </label>
+        </div>
+      `;
+
+      // next disabled until required
+      nextBtn.disabled = true;
+
+      // hook inputs
+      const fullNameEl = document.getElementById("fullName");
+      const genderEl   = document.getElementById("gender");
+      const emailEl    = document.getElementById("email");
+
+      function sync(){
+        fullName = fullNameEl.value.trim();
+        gender   = genderEl.value;
+        email    = emailEl.value.trim();
+        nextBtn.disabled = !(fullName && gender);
+      }
+
+      fullNameEl.addEventListener("input", sync);
+      genderEl.addEventListener("change", sync);
+      emailEl.addEventListener("input", sync);
+      sync();
+      return;
+    }
+
+    // question step
+    if (currentIsQuestion()){
+      const qi = currentQIndex();
+      const item = data[qi];
+
+      stepCard.innerHTML = `
+        <div class="q">
+          <h3>שאלה ${qi + 1} מתוך 10</h3>
+          <p>${escapeHtml(item.q)}</p>
+          <div class="opts" id="opts"></div>
+        </div>
+      `;
+
+      const optsEl = document.getElementById("opts");
+
+      item.a.forEach((txt, j) => {
+        const val = j + 1; // 1..4
+        const selected = (answers[qi] === val);
+
+        const label = document.createElement("label");
+        label.className = "opt";
+        label.innerHTML = `
+          <input type="radio" name="q" value="${val}" ${selected ? "checked" : ""} />
+          <span>${escapeHtml(txt)}</span>
+        `;
+        optsEl.appendChild(label);
+
+        // auto-next on click (but still allow manual next/back)
+        label.addEventListener("click", () => {
+          answers[qi] = val;
+          updateProgress();
+          clearError();
+
+          // מראה שהבחירה נקלטה + מעבר אוטומטי
+          setTimeout(() => {
+            if (isLastQuestionStep()){
+              renderFinalButtons();
+            } else {
+              goToStep(stepIndex + 1);
+            }
+          }, 220);
+        });
+      });
+
+      // prev enabled always here
+      prevBtn.disabled = false;
+
+      // next enabled only if answered current question
+      nextBtn.disabled = (answers[qi] === null);
+
+      // if already answered, keep next enabled
+      // re-check on any change
+      stepCard.addEventListener("change", (e) => {
+        if (e.target && e.target.matches('input[type="radio"][name="q"]')) {
+          answers[qi] = Number(e.target.value);
+          updateProgress();
+          nextBtn.disabled = false;
+        }
+      }, { once: true });
+
+      // last step -> show submit instead of next
+      if (isLastQuestionStep()){
+        renderFinalButtons();
+      }
+
+      return;
+    }
+
+    // fallback (shouldn't happen)
+    stepCard.innerHTML = "";
+  }
+
+  function renderFinalButtons(){
+    nextBtn.style.display = "none";
+    submitBtn.style.display = "inline-block";
+    submitBtn.disabled = answeredCount() !== data.length;
+  }
+
+  // basic HTML escape (avoid breaking layout when user types)
+  function escapeHtml(str){
+    return String(str || "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // ====== ACTIONS ======
+  startBtn.addEventListener("click", () => {
+    introScreen.style.display = "none";
+    quizScreen.style.display = "block";
+    goToStep(0); // details
   });
 
-  document.getElementById("submitBtn").addEventListener("click", submitQuiz);
+  prevBtn.addEventListener("click", () => {
+    if (stepIndex > 0) goToStep(stepIndex - 1);
+  });
+
+  nextBtn.addEventListener("click", () => {
+    clearError();
+
+    // details validation
+    if (currentIsDetails()){
+      // sync current inputs
+      const fullNameEl = document.getElementById("fullName");
+      const genderEl   = document.getElementById("gender");
+      const emailEl    = document.getElementById("email");
+      fullName = (fullNameEl?.value || "").trim();
+      gender   = (genderEl?.value || "");
+      email    = (emailEl?.value || "").trim();
+
+      if (!fullName || !gender){
+        showError("חסר שם מלא או מגדר.");
+        return;
+      }
+
+      goToStep(1); // first question
+      return;
+    }
+
+    // question validation
+    if (currentIsQuestion()){
+      const qi = currentQIndex();
+      if (answers[qi] === null){
+        showError("בחר אופציה כדי להמשיך.");
+        return;
+      }
+
+      if (isLastQuestionStep()){
+        renderFinalButtons();
+        return;
+      }
+
+      goToStep(stepIndex + 1);
+      return;
+    }
+  });
+
+  async function submitQuiz(){
+    clearError();
+
+    // validate details (in case user jumped back)
+    if (!fullName || !gender){
+      showError("חסר שם מלא או מגדר.");
+      goToStep(0);
+      return;
+    }
+
+    // validate answers
+    for (let i = 0; i < data.length; i++){
+      if (answers[i] === null){
+        showError("חסרה לפחות תשובה אחת.");
+        goToStep(i + 1); // question step
+        return;
+      }
+    }
+
+    try{
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers, fullName, gender, email })
+      });
+
+      const dataRes = await res.json();
+
+      const params = new URLSearchParams({ type: dataRes.type });
+      window.location.href = `/result.html?${params.toString()}`;
+    } catch (e){
+      showError("משהו השתבש בשליחה. נסה שוב.");
+    }
+  }
+
+  submitBtn.addEventListener("click", submitQuiz);
+
+  // init ui
+  updateProgress();
 </script>
 </body>
 </html>
