@@ -11,7 +11,7 @@ body{
   font-family: Arial, sans-serif;
   background:#0b0c10;
   color:white;
-  overflow:hidden;
+  overflow-x:hidden;
 }
 
 .center{
@@ -28,6 +28,15 @@ body{
   font-size:28px;
   animation:pulse 0.8s infinite alternate;
 }
+
+.resultLogo{
+  margin-top:24px;
+  width:min(340px, 92vw);
+  max-width:360px;
+  height:auto;
+  opacity:0.95;
+}
+
 
 @keyframes pulse{
   from{transform:scale(1);}
@@ -66,16 +75,43 @@ body{
   line-height:1.5;
 }
 
-.btn{
-  margin-top:25px;
-  display:inline-block;
-  background:white;
-  color:black;
-  padding:12px 20px;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:bold;
+@keyframes popIn{
+  from{ opacity:0; transform:translateY(16px) scale(0.98); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
 }
+.card{
+  animation: popIn 520ms cubic-bezier(.2,.9,.2,1) both;
+    display:block;
+  opacity:0;
+  transform:translateY(16px) scale(0.98);
+  pointer-events:none;
+}
+
+.card.show{
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+}
+
+.btn{
+  margin-top:28px;
+  width:100%;
+  max-width:320px;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  background:linear-gradient(90deg,#7c5cff,#2ee59d);
+  color:#0b0c10;
+  padding:14px 22px;
+  border-radius:14px;
+  text-decoration:none;
+  font-weight:800;
+  font-size:16px;
+  box-shadow:0 10px 24px rgba(124,92,255,0.18);
+  transition:transform 120ms ease, opacity 120ms ease;
+}
+.btn:hover{ transform:translateY(-1px); }
 
 /* 🎉 קונפטי */
 .confetti{
@@ -92,6 +128,71 @@ body{
     transform:translateY(110vh) rotate(360deg);
   }
 }
+
+/* ===== LOADER ===== */
+
+.loaderScreen{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:18px;
+}
+
+.loaderLogo{
+  width:140px;
+  animation:float 2s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+  100%{transform:translateY(0);}
+}
+
+.loaderText{
+  font-size:22px;
+  font-weight:700;
+}
+
+.dots span{
+  width:10px;
+  height:10px;
+  margin:0 4px;
+  background:#7c5cff;
+  border-radius:50%;
+  display:inline-block;
+  animation:bounce 1.2s infinite ease-in-out;
+}
+
+.dots span:nth-child(2){animation-delay:.2s;}
+.dots span:nth-child(3){animation-delay:.4s;}
+
+@keyframes bounce{
+  0%,80%,100%{transform:scale(0);}
+  40%{transform:scale(1);}
+}
+
+.logoBadge{
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+  backdrop-filter: blur(8px);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.logoBadge img{
+  width: min(340px, 86vw);
+  height: auto;
+  filter: drop-shadow(0 10px 18px rgba(124,92,255,0.18));
+}
+
+
 </style>
 </head>
 
@@ -100,9 +201,18 @@ body{
 <div class="center">
 
   <!-- שלב תופים -->
-  <div id="loading">
-    🥁 בודקים את התוצאה שלך...
+<div id="loading" class="loaderScreen">
+
+  <img src="/gil-logo.png" class="loaderLogo">
+
+  <div class="loaderText">בודקים את התוצאה שלך</div>
+
+  <div class="dots">
+    <span></span><span></span><span></span>
   </div>
+
+</div>
+
 
   <!-- כרטיס תוצאה -->
   <div class="card" id="resultCard">
@@ -133,8 +243,11 @@ body{
 את מה שגילית כאן אפשר לפתח אצלנו – בתכניות, במועדון ובפעילויות החדשנות של תל חי.
 </p>
 
-<img src="/gil-logo.png"
-     style="margin-top:20px; max-width:200px;">
+<div class="logoBadge">
+  <img src="/gil-logo.png" class="resultLogo" alt="לוגו">
+</div>
+
+
 
 
 
@@ -154,14 +267,15 @@ const type = params.get("type") || "לא ידוע";
 /* טקסטים */
 const resultText = {
   "המתבוננת":
-    "יש לך יכולת לראות דפוסים והזדמנויות שאחרים מפספסים. את מביאה עומק ודיוק לכל רעיון.",
+    "יש לך יכולת לראות דפוסים והזדמנויות שאחרים מפספסים. זהו ניצוץ חשוב שמאפשר לזהות רעיונות עוד לפני שהם נוצרים.",
   "החולמת":
-    "יש לך חשיבה יצירתית ודמיון שמוביל אותך קדימה. את רואה אפשרויות חדשות.",
+    "יש לך חשיבה יצירתית ודמיון שמוביל אותך קדימה. את רואה אפשרויות חדשות ופותחת דלתות למשהו שעוד לא קיים.",
   "המחברת":
-    "אנשים הם המרכז אצלך. יש לך יכולת לחבר, לשתף פעולה ולהניע אחרים.",
+    "את מבינה שאנשים הם המרכז. יש לך יכולת לחבר, לשתף פעולה ולהניע אחרים. מיזמים רבים נולדים בדיוק כך.",
   "המיישם":
-    "יש לך אנרגיה שמניעה דברים לקרות. את מביאה רעיונות לשטח."
+    "יש לך אנרגיה שמניעה דברים לקרות. את מביאה רעיונות לשטח ומובילה אותם לפעולה. בלי אנשים כמוך, שום רעיון לא זז."
 };
+
 
 const links = {
   "המתבוננת":"https://example.com/observer",
@@ -171,8 +285,9 @@ const links = {
 };
 
 document.getElementById("type").textContent = type;
-document.getElementById("desc").textContent =
-  resultText[type] || "";
+document.getElementById("desc").innerHTML =
+  (resultText[type] || "").replace(/\n/g,"<br>");
+
 
 
 /* אפקט קונפטי */
@@ -188,12 +303,12 @@ function launchConfetti(){
   }
 }
 
-/* תופים -> תוצאה */
 setTimeout(()=>{
   document.getElementById("loading").style.display="none";
-  document.getElementById("resultCard").style.display="block";
+  const card = document.getElementById("resultCard");
+  card.classList.add("show");
   launchConfetti();
-},2000);
+},2200);
 
 
 

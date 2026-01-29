@@ -18,6 +18,14 @@
       --radius: 18px;
     }
 
+@media (max-width:480px){
+  .card{ padding:28px 18px; }
+  .type{ font-size:34px; }
+  .desc{ font-size:16px; }
+}
+
+
+
     * { box-sizing: border-box; }
     body {
       margin: 0;
@@ -28,16 +36,15 @@
       color: var(--text);
     }
 
-    .site-logo{
-      position:fixed;
-      top:16px;
-      right:16px; /* לשמאל: החלף ל left:16px; ותמחק right */
-      width:70px;
-      opacity:0.95;
-      z-index:9999;
-      pointer-events:none;
-      user-select:none;
-    }
+.site-logo{
+  width:160px;
+  height:auto;
+}
+@media (max-width:560px){
+  .site-logo{ width:120px; }
+}
+
+
 
     .wrap {
       max-width: 920px;
@@ -256,16 +263,19 @@
       display:grid;
       gap:10px;
     }
+.introCTA{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:center;     /* מרכז את כל השורה */
+  flex-direction: row-reverse;/* הופך את הסדר: הכפתור עובר לשמאל */
+  flex-wrap:nowrap;           /* שלא ירד שורה */
+  width:100%;
+}
 
-    .introCTA{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:flex-start;
-      flex-wrap:wrap;
-    }
 
     @media (max-width: 560px) {
+      /* תמונת פתיחה בתחתית מסך הפתיחה */
       .title { font-size: 26px; }
       .q p { font-size: 17px; }
       .footer { flex-direction: column; align-items: stretch; }
@@ -275,10 +285,104 @@
       .topbar { flex-direction: column; align-items: stretch; }
       .pill { justify-content:center; }
     }
+
+/* ===== SUBMIT LOADER (כמו בריסולט) ===== */
+.submitBox{
+  background:rgba(18,20,27,0.92);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:18px;
+  padding:22px 16px;
+  width:min(420px, 92vw);
+  text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.45);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:14px;
+}
+
+.loaderLogo{
+  width:130px;
+  height:auto;
+  animation:float 2s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+  100%{transform:translateY(0);}
+}
+
+.loaderText{
+  font-size:18px;
+  font-weight:800;
+}
+
+.dots span{
+  width:10px;
+  height:10px;
+  margin:0 4px;
+  background:#7c5cff;
+  border-radius:50%;
+  display:inline-block;
+  animation:bounce 1.2s infinite ease-in-out;
+}
+
+.dots span:nth-child(2){animation-delay:.2s;}
+.dots span:nth-child(3){animation-delay:.4s;}
+
+@keyframes bounce{
+  0%,80%,100%{transform:scale(0);}
+  40%{transform:scale(1);}
+}
+
+
+/* כפתור פתיחה יותר גדול ומזמין */
+#startBtn{
+  padding: 16px 24px;
+  font-size: 18px;
+  border-radius: 16px;
+  min-width: 170px;
+}
+
+
+/* לסדר את אזור הכפתור לשמאל (ב-RTL זה flex-start) */
+.introCTA{
+  justify-content: flex-start;
+  width: 100%;
+}
+
+/* להרחיק קצת מהטקסט ולתת תחושה של "כפתור ראשי" */
+.introCard{
+  gap: 14px;
+}
+
+
   </style>
 </head>
 
 <body>
+
+  
+
+<div id="submitOverlay" style="
+  position:fixed; inset:0; display:none;
+  justify-content:center; align-items:center;
+  background:rgba(11,12,16,0.75);
+  backdrop-filter: blur(8px);
+  z-index:99999;
+">
+  <div class="submitBox">
+    <img src="/gil-logo.png" class="loaderLogo" alt="לוגו">
+    <div class="loaderText">בודקים את התוצאה שלך</div>
+    <div class="dots" aria-label="loading">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+
+  </div>
+
   <img src="/gil-logo.png" class="site-logo" alt="לוגו">
   <div class="wrap">
     <div class="card">
@@ -300,6 +404,8 @@
       <div id="introScreen">
         <div class="introBox">
           <div class="introCard">
+
+
             <p style="margin:0; font-size:18px;">
               זה שאלון קצר, קליל ומדויק.
             </p>
@@ -697,20 +803,35 @@
       }
     }
 
-    try{
-      const res = await fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers, fullName, gender, email })
-      });
+try{
+  const overlay = document.getElementById("submitOverlay");
+  if (overlay) overlay.style.display = "flex";
 
-      const dataRes = await res.json();
+  submitBtn.disabled = true;
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
 
-      const params = new URLSearchParams({ type: dataRes.type });
-      window.location.href = `/result.html?${params.toString()}`;
-    } catch (e){
-      showError("משהו השתבש בשליחה. נסה שוב.");
-    }
+  const res = await fetch("/api/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ answers, fullName, gender, email })
+  });
+
+  const dataRes = await res.json();
+  const params = new URLSearchParams({ type: dataRes.type });
+
+  window.location.href = `/result.html?${params.toString()}`;
+
+} catch (e){
+  showError("משהו השתבש בשליחה. נסה שוב.");
+  const overlay = document.getElementById("submitOverlay");
+  if (overlay) overlay.style.display = "none";
+  submitBtn.disabled = false;
+  prevBtn.disabled = false;
+  nextBtn.disabled = false;
+}
+
+
   }
 
   submitBtn.addEventListener("click", submitQuiz);
