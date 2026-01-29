@@ -264,14 +264,14 @@
       gap:10px;
     }
 .introCTA{
+  margin-top:18px;
   display:flex;
-  gap:12px;
+  flex-direction:column;
   align-items:center;
-  justify-content:center;     /* מרכז את כל השורה */
-  flex-direction: row-reverse;/* הופך את הסדר: הכפתור עובר לשמאל */
-  flex-wrap:nowrap;           /* שלא ירד שורה */
-  width:100%;
+  gap:12px;
 }
+
+
 
 
     @media (max-width: 560px) {
@@ -339,11 +339,12 @@
 
 /* כפתור פתיחה יותר גדול ומזמין */
 #startBtn{
-  padding: 16px 24px;
-  font-size: 18px;
-  border-radius: 16px;
-  min-width: 170px;
+  padding:16px 26px;
+  font-size:18px;
+  border-radius:18px;
+  min-width:200px;
 }
+
 
 
 /* לסדר את אזור הכפתור לשמאל (ב-RTL זה flex-start) */
@@ -363,21 +364,6 @@
 
 <body>
 
-  
-
-<div id="submitOverlay" style="
-  position:fixed; inset:0; display:none;
-  justify-content:center; align-items:center;
-  background:rgba(11,12,16,0.75);
-  backdrop-filter: blur(8px);
-  z-index:99999;
-">
-  <div class="submitBox">
-    <img src="/gil-logo.png" class="loaderLogo" alt="לוגו">
-    <div class="loaderText">בודקים את התוצאה שלך</div>
-    <div class="dots" aria-label="loading">
-      <span></span><span></span><span></span>
-    </div>
   </div>
 
 
@@ -397,27 +383,39 @@
         <div class="progress" aria-label="progress">
           <div id="bar"></div>
         </div>
-        <div class="pill">ניקוד לפי בחירה: 1–4</div>
       </div>
 
       <!-- INTRO -->
       <div id="introScreen">
         <div class="introBox">
-          <div class="introCard">
+    <div class="introCard">
+
+ <div class="introBox">
+
+  <div class="introCard">
+
+    <p style="margin:0; font-size:18px;">
+      זה שאלון קצר, קליל ומדויק.
+    </p>
+
+    <p style="margin:0; color:var(--muted);">
+      תבחר/י את האופציה שהכי את/ה, בלי לחשוב יותר מדי.
+    </p>
+
+  </div>
+
+  <!-- הכפתור עכשיו מחוץ לריבוע -->
+  <div class="introCTA">
+    <button id="startBtn">בוא/י נתחיל</button>
+    <span class="hint">לוקח בערך דקה</span>
+  </div>
+
+</div>
 
 
-            <p style="margin:0; font-size:18px;">
-              זה שאלון קצר, קליל ומדויק.
-            </p>
-            <p style="margin:0; color:var(--muted);">
-              תבחר את האופציה שהכי “אתה”, בלי לחשוב יותר מדי.
-            </p>
+</div>
 
-            <div class="introCTA">
-              <button id="startBtn">בואו נתחיל</button>
-              <span class="hint">לוקח בערך דקה</span>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -804,8 +802,6 @@
     }
 
 try{
-  const overlay = document.getElementById("submitOverlay");
-  if (overlay) overlay.style.display = "flex";
 
   submitBtn.disabled = true;
   prevBtn.disabled = true;
