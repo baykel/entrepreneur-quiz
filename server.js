@@ -73,10 +73,10 @@ app.get("/api/sheets-read-test", ensureSheets, async (req, res) => {
 });
 
 function typeFromScore(score) {
-  if (score >= 10 && score <= 16) return "המתבוננים";
-  if (score >= 17 && score <= 23) return "החולמים";
-  if (score >= 24 && score <= 30) return "המחברים";
-  if (score >= 31 && score <= 40) return "המיישמים";
+  if (score >= 10 && score <= 16) return "המתבונן/ת";
+  if (score >= 17 && score <= 23) return "החולם/ת";
+  if (score >= 24 && score <= 30) return "המחבר/ת";
+  if (score >= 31 && score <= 40) return "המיישם/ת";
   return "לא ידוע";
 }
 
