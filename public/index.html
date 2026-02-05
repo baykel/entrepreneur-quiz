@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>איזה יזם/ת אני?</title>
+<title>איזה טיפוס יזמי אני?</title>
+
 
   <style>
     :root {
@@ -374,8 +375,10 @@
     <div class="card">
 
       <header>
-        <h1 class="title">איזה יזם/ת אני?</h1>
-        <p class="subtitle">ענו על 10 שאלות קצרות וגלו איזה טיפוס יזמי אתם.</p>
+      <h1 class="title">איזה טיפוס יזמי אני?</h1>
+
+        <p class="subtitle">ענו על 10 שאלות קצרות וגלו איזה טיפוס יזמי מתאים לכם.</p>
+
       </header>
 
       <div class="topbar">
@@ -399,14 +402,16 @@
     </p>
 
     <p style="margin:0; color:var(--muted);">
-      תבחר/י את האופציה שהכי את/ה, בלי לחשוב יותר מדי.
+       בחרו את האופציה שהכי מתאימה לכם, בלי לחשוב יותר מדי.
+
     </p>
 
   </div>
 
   <!-- הכפתור עכשיו מחוץ לריבוע -->
   <div class="introCTA">
-    <button id="startBtn">בוא/י נתחיל</button>
+    <button id="startBtn">יאללה, מתחילים</button>
+
     <span class="hint">לוקח בערך דקה</span>
   </div>
 
@@ -427,7 +432,8 @@
 
         <div class="footer">
           <div class="footer-left">
-            <div class="hint" id="hintText">טיפ: תבחר את מה שהכי “אתה”, בלי לחשוב יותר מדי.</div>
+            <div class="hint" id="hintText">טיפ: בחרו את מה שהכי מרגיש נכון לכם.
+</div>
             <div class="error" id="err"></div>
           </div>
 
@@ -445,67 +451,69 @@
 <script>
   // ====== DATA ======
   const data = [
-    { q: "כשאת מזהה בעיה בסביבה היומיומית שלך?", a: [
-      "מנסה להבין מאיפה היא מגיעה",
-      "חושב\\ת על רעיון חדש שיכול לשפר",
-      "חושב\\ת על חיבור מול אנשים שיכולים לעזור",
-      "מחפש\\ת דרך לטפל בזה מידית"
-    ]},
-    { q: "מה הכי מסקרן אותך?", a: [
-      "להבין תהליכים",
-      "לדמיין משהו חדש",
-      "לעבוד עם אנשים וליצור קשרים חדשים",
-      "לבצע פרויקטים ולהתקדם"
-    ]},
-    { q: "איך את ניגשת לפרויקט חדש", a: [
-      "קורא\\ת ולומד\\ת קודם",
-      "חושב\\ת על כיוונים יצירתיים",
-      "מדבר\\ת עם אנשים ומחליפ\\ה רעיונות",
-      "מתחיל\\ה לעשות ולומד\\ת תוך כדי"
-    ]},
-    { q: "איזה משפט נשמע לך מוכר", a: [
-      "אני שמ\\ה לב לפרטים קטנים",
-      "יש לי מלא רעיונות",
-      "אני טוב\\ה בחיבורים בין אנשים",
-      "אני אוהב\\ת שהדברים זזים"
-    ]},
-    { q: "כשמישהו מציג רעיון חדש", a: [
-      "אני שואל\\ת שאלות עומק",
-      "אני חושב\\ת איך אפשר לעשות את זה טוב יותר",
-      "אני בודק\\ת מי יכול לעזור לו",
-      "אני שואל\\ת איך הוא יבצע את זה"
-    ]},
-    { q: "בשעה פנויה את\\ה מעדיפ\\ה", a: [
-      "לצפות במשהו מעשיר ומלמד",
-      "להעלות ולפתח רעיונות חדשים",
-      "לייצר שיח עם מישהו חדש שמעניין אותך",
-      "לסגור משימות שדחית כבר הרבה זמן"
-    ]},
-    { q: "מה מבאס אותך יותר", a: [
-      "בעיות שאין להן פתרון",
-      "רעיונות טובים שלא באים ליידי מימוש",
-      "אנשים שלא משתפים פעולה",
-      "דיבורים בלי ביצוע"
-    ]},
-    { q: "כשיש לך משימה קשה", a: [
-      "את\\ה לומדת אותה לעומק",
-      "את\\ה מחפש\\ת דרך יצירתית לגשת אליה",
-      "את\\ה מבקש\\ת נקודת מבט מאדם נוסף",
-      "את\\ה קופצ\\ת ישר לתוך העשייה"
-    ]},
-    { q: "על מה את מקבלת מחמאות בדרך כלל", a: [
-      "חשיבה חדה",
-      "יצירתיות",
-      "יכולת תקשורת",
-      "יעילות בעשייה"
-    ]},
-    { q: "מה מהבאים הכי מתאים לך", a: [
-      "אני אוהבת לפענח ולפתח",
-      "אני אוהבת לחלום ולחדש",
-      "אני אוהבת תקשורת ואנשים",
-      "אני אוהבת שדברים קורים"
-    ]}
-  ];
+  { q: "כשאתם מזהים בעיה בסביבה היומיומית שלכם:", a: [
+    "מנסים להבין מאיפה היא מגיעה",
+    "חושבים על רעיון חדש שיכול לשפר",
+    "חושבים על חיבור עם אנשים שיכולים לעזור",
+    "מחפשים דרך לטפל בזה מיד"
+  ]},
+  { q: "מה הכי מסקרן אתכם?", a: [
+    "להבין תהליכים",
+    "לדמיין משהו חדש",
+    "לעבוד עם אנשים וליצור קשרים",
+    "לבצע פרויקטים ולהתקדם"
+  ]},
+  { q: "איך אתם ניגשים לפרויקט חדש?", a: [
+    "קוראים ולומדים קודם",
+    "חושבים על כיוונים יצירתיים",
+    "מדברים עם אנשים ומחליפים רעיונות",
+    "מתחילים לעשות ולומדים תוך כדי"
+  ]},
+  { q: "איזה משפט נשמע לכם מוכר?", a: [
+    "אני שם לב לפרטים קטנים",
+    "יש לי מלא רעיונות",
+    "אני טוב ביצירת חיבורים בין אנשים",
+    "אני אוהב שדברים זזים"
+  ]},
+  { q: "כשמישהו מציג רעיון חדש:", a: [
+    "שואלים שאלות עומק",
+    "חושבים איך אפשר לשפר אותו",
+    "בודקים מי יכול לעזור לו",
+    "שואלים איך אפשר להתחיל לבצע"
+  ]},
+  { q: "בשעה פנויה אתם מעדיפים:", a: [
+    "לצפות במשהו מעשיר ומלמד",
+    "לפתח רעיונות חדשים",
+    "לנהל שיחה עם מישהו מעניין",
+    "לסגור משימות שדחיתם"
+  ]},
+  { q: "מה מבאס אתכם יותר?", a: [
+    "בעיות שאין להן פתרון",
+    "רעיונות טובים שלא מתממשים",
+    "אנשים שלא משתפים פעולה",
+    "דיבורים בלי ביצוע"
+  ]},
+  { q: "כשיש לכם משימה קשה:", a: [
+    "לומדים אותה לעומק",
+    "מחפשים דרך יצירתית לגשת אליה",
+    "מבקשים נקודת מבט נוספת",
+    "קופצים ישר לעשייה"
+  ]},
+  { q: "על מה אתם מקבלים מחמאות בדרך כלל?", a: [
+    "חשיבה חדה",
+    "יצירתיות",
+    "יכולת תקשורת",
+    "יעילות בעשייה"
+  ]},
+  { q: "מה הכי מתאים לכם?", a: [
+    "אני אוהב לפענח ולפתח",
+    "אני אוהב לחלום ולחדש",
+    "אני אוהב אנשים ותקשורת",
+    "אני אוהב לגרום לדברים לקרות"
+  ]}
+];
+
+
 
   // ====== STATE ======
   // stepType: "details" OR "q"
@@ -516,6 +524,8 @@
   let fullName = "";
   let gender = "";
   let email = "";
+  let newsletter = "NO";
+
 
   // ====== ELEMENTS ======
   const introScreen = document.getElementById("introScreen");
@@ -618,6 +628,12 @@
                      background:rgba(255,255,255,0.02); color:var(--text);"
             />
           </label>
+
+          <label class="opt" style="cursor:default;">
+  <input id="newsletter" type="checkbox" style="width:18px; height:18px;" ${newsletter==="YES" ? "checked" : ""} />
+  <span style="color: var(--text);">אני רוצה לקבל עדכונים ממועדון היזמות</span>
+</label>
+
         </div>
       `;
 
@@ -628,17 +644,24 @@
       const fullNameEl = document.getElementById("fullName");
       const genderEl   = document.getElementById("gender");
       const emailEl    = document.getElementById("email");
+      const nlEl = document.getElementById("newsletter");
+
 
       function sync(){
         fullName = fullNameEl.value.trim();
         gender   = genderEl.value;
         email    = emailEl.value.trim();
+        newsletter = (document.getElementById("newsletter")?.checked) ? "YES" : "NO";
+        newsletter = nlEl && nlEl.checked ? "YES" : "NO";
         nextBtn.disabled = !(fullName && gender);
       }
 
       fullNameEl.addEventListener("input", sync);
       genderEl.addEventListener("change", sync);
       emailEl.addEventListener("input", sync);
+      nlEl.addEventListener("change", sync);
+
+
       sync();
       return;
     }
@@ -810,11 +833,21 @@ try{
   const res = await fetch("/api/submit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ answers, fullName, gender, email })
+    body: JSON.stringify({ answers, fullName, gender, email, newsletter })
+
   });
 
   const dataRes = await res.json();
   const params = new URLSearchParams({ type: dataRes.type });
+
+  localStorage.setItem("quizPayload", JSON.stringify({
+  fullName,
+  gender,
+  email,
+  type: dataRes.type,
+  newsletter
+}));
+
 
   window.location.href = `/result.html?${params.toString()}`;
 

@@ -1,3 +1,16 @@
-node_modules/ # לא מעלים ספריות
-data.sqlite # לא מעלים DB (נתונים מקומיים)
-.env # קבצי סודות (אם יהיו)
+
+
+node_modules/
+.env
+*.sqlite
+*.db
+*.json
+!package.json
+!package-lock.json
+!public/*.json
+service-account.json
+entrepreneur-quiz-486500-*.json
+*.pdf
+*.jpg
+*.png
+*.docx

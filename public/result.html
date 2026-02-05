@@ -115,19 +115,23 @@ body{
 
 /* 🎉 קונפטי */
 .confetti{
-  position:absolute;
-  width:10px;
-  height:10px;
-  background:red;
-  top:-10px;
-  animation:fall linear forwards;
+  position: fixed;
+  top: -12px;
+  width: 10px;
+  height: 10px;
+  background: red;
+  animation: fall linear forwards;
+  pointer-events: none;
+  z-index: 999999;
+  will-change: transform;
 }
 
 @keyframes fall{
   to{
-    transform:translateY(110vh) rotate(360deg);
+    transform: translateY(110dvh) rotate(360deg);
   }
 }
+
 
 /* ===== LOADER ===== */
 
@@ -223,7 +227,8 @@ body{
 
 <h3 style="font-size:22px;">כל ניצוץ יזמי הוא התחלה.</h3>
 
-<p style="margin-top:10px;">רשום/י לנו מהו החלום היזמי שלך:</p>
+<p style="margin-top:10px;">ספרו לנו מה החלום היזמי שלכם:</p>
+
 
 <textarea id="dream"
   placeholder="החלום היזמי שלי הוא..."
@@ -238,6 +243,13 @@ body{
     font-size:16px;
   ">
 </textarea>
+
+<button id="sendDreamBtn" class="btn" style="border:0; cursor:pointer;">
+  שלח/י
+</button>
+
+<div id="sendMsg" style="margin-top:12px; color:#cfd3ff;"></div>
+
 
 <p style="margin-top:18px; color:#cfd3ff;">
 את מה שגילית כאן אפשר לפתח אצלנו – בתכניות, במועדון ובפעילויות החדשנות של תל חי.
@@ -266,15 +278,16 @@ const type = params.get("type") || "לא ידוע";
 
 /* טקסטים */
 const resultText = {
-  "המתבוננת":
-    "יש לך יכולת לראות דפוסים והזדמנויות שאחרים מפספסים. זהו ניצוץ חשוב שמאפשר לזהות רעיונות עוד לפני שהם נוצרים.",
-  "החולמת":
-    "יש לך חשיבה יצירתית ודמיון שמוביל אותך קדימה. את רואה אפשרויות חדשות ופותחת דלתות למשהו שעוד לא קיים.",
-  "המחברת":
-    "את מבינה שאנשים הם המרכז. יש לך יכולת לחבר, לשתף פעולה ולהניע אחרים. מיזמים רבים נולדים בדיוק כך.",
-  "המיישם":
-    "יש לך אנרגיה שמניעה דברים לקרות. את מביאה רעיונות לשטח ומובילה אותם לפעולה. בלי אנשים כמוך, שום רעיון לא זז."
+  "המתבוננים":
+    "יש לכם יכולת לזהות דפוסים והזדמנויות שאחרים מפספסים. זה ניצוץ שמאפשר לתפוס רעיונות עוד לפני שהם “נולדים” באמת.",
+  "החולמים":
+    "יש לכם חשיבה יצירתית ודמיון שמוביל קדימה. אתם רואים אפשרויות חדשות ופותחים דלתות למשהו שעוד לא קיים.",
+  "המחברים":
+    "אתם מבינים שאנשים הם המרכז. יש לכם יכולת לחבר, לשתף פעולה ולהניע אחרים — והרבה מיזמים נולדים בדיוק ככה.",
+  "המיישמים":
+    "יש לכם אנרגיה שגורמת לדברים לקרות. אתם לוקחים רעיונות לשטח ומקדמים אותם לפעולה. בלי אנשים כמוכם, רעיונות נשארים על הנייר."
 };
+
 
 
 const links = {
@@ -295,13 +308,15 @@ function launchConfetti(){
   for(let i=0;i<80;i++){
     const c=document.createElement("div");
     c.className="confetti";
-    c.style.left=Math.random()*100+"vw";
+    c.style.left = Math.floor(Math.random() * window.innerWidth) + "px";
     c.style.background=`hsl(${Math.random()*360},100%,50%)`;
     c.style.animationDuration=(2+Math.random()*2)+"s";
     document.body.appendChild(c);
+    c.getBoundingClientRect(); // force layout
     setTimeout(()=>c.remove(),4000);
   }
 }
+
 
 setTimeout(()=>{
   document.getElementById("loading").style.display="none";
@@ -316,6 +331,37 @@ document.getElementById("againBtn").addEventListener("click", () => {
 // "לחיצה על כפתור שוב"
   window.location.href = "/"; 
   // "חוזר לדף הראשי"
+});
+
+
+document.getElementById("sendDreamBtn").addEventListener("click", async () => {
+  const dream = (document.getElementById("dream").value || "").trim();
+  const payloadRaw = localStorage.getItem("quizPayload");
+  const msgEl = document.getElementById("sendMsg");
+
+  if (!payloadRaw) {
+    msgEl.textContent = "לא נמצאו פרטים לשליחה. נסה/י לבצע את השאלון מחדש.";
+    return;
+  }
+
+  const payload = JSON.parse(payloadRaw);
+
+  try {
+    const r = await fetch("/api/append", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...payload, dream })
+    });
+
+    const out = await r.json();
+    if (!r.ok) throw new Error(out?.error || "send failed");
+
+    msgEl.textContent = "נשלח! תודה 🙌";
+    document.getElementById("sendDreamBtn").disabled = true;
+
+  } catch (e) {
+    msgEl.textContent = "משהו השתבש בשליחה. נסה/י שוב.";
+  }
 });
 
 
