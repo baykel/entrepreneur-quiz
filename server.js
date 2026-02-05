@@ -3,7 +3,8 @@ require("dotenv").config();
 const path = require("path");
 const db = require("./db");
 const { google } = require("googleapis");
-const creds = require("./service-account.json");
+const creds = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON || "{}");
+
 
 const app = express();
 app.use(express.json());
